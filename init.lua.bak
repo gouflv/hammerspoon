@@ -1,0 +1,141 @@
+local hotkey = require 'hs.hotkey'
+local screen = require 'hs.screen'
+local window = require 'hs.window'
+local layout = require 'hs.layout'
+local geometry = require 'hs.geometry'
+local logger = require 'hs.logger'
+
+local log = logger.new('default', 'debug')
+
+local primaryKey = { 'option' }
+layout.left65 = geometry.rect(0, 0, 0.65, 1)
+layout.right55 = geometry.rect(0.45, 0, 0.55, 1)
+
+local getFocusedWindow = function() return window.focusedWindow() end
+
+local move = function(win, rect, toScreen)
+  win:moveToUnit(rect)
+  if toScreen then
+    win:moveToScreen(toScreen)
+  end
+end
+local move_left = function() move(getFocusedWindow(), layout.left50) end
+local move_left_large = function() move(getFocusedWindow(), layout.left65) end
+local move_right = function() move(getFocusedWindow(), layout.right50) end
+local move_right_large = function() move(getFocusedWindow(), layout.right55) end
+
+local move_large_center = function()
+  local win = window.focusedWindow()
+  local f = win:frame()
+  local screen = screen.primaryScreen()
+  local max = screen:frame()
+  f.x = max.w * 0.3 / 2
+  f.y = max.y
+  f.w = max.w * 0.7
+  f.h = max.h
+  win:moveToScreen(screen)
+  win:setFrameInScreenBounds(f)
+end
+
+local flat_windows = function(wins, w, h, offx, offy)
+  local index = 0
+  for key, win in pairs(wins) do
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    f.x = max.w * 0.1 + offx * index
+    f.y = max.h * 0.1 + offy * index
+    f.w = w
+    f.h = h
+    win:setFrame(f)
+    index = index + 1
+  end
+end
+
+local move_screen = function(sc)
+  local win = window.focusedWindow()
+  win:moveToScreen(sc)
+end
+
+hotkey.bind(primaryKey, '1', function()
+  local win = window.focusedWindow()
+  local app = win:application()
+  local app_name = app:title()
+  local app_windows = app:allWindows()
+
+  if app_name == 'Safari' then
+    move_large_center()
+
+  elseif app_name == 'Google Chrome' or app_name == 'Firefox' then
+    if win:screen() == screen.primaryScreen() then
+      move_left_large()
+    else
+      move_left()
+    end
+
+  elseif app_name == 'Code' then
+    local win = window.focusedWindow()
+    local f = win:frame()
+    local max = win:screen():frame()
+
+    if f.h >= max.h - 10 then
+      f.w = 950
+      f.h = 900
+      win:setFrame(f)
+      win:centerOnScreen()
+    else
+      if win:screen() == screen.primaryScreen() then
+        move_right_large()
+      else
+        move_right()
+      end
+    end
+
+  elseif app_name == 'iTerm2' then
+    local win = window.focusedWindow()
+    local f = win:frame()
+    local max = win:screen():frame()
+
+    if f.h >= max.h - 10 then
+      f.w = 900
+      f.h = 750
+      win:setFrame(f)
+      win:centerOnScreen()
+    else
+      move_right()
+    end
+
+  elseif app_name == 'WebStorm' or app_name == 'Android Studio' then
+    local win = window.focusedWindow()
+    if win:screen() == screen.primaryScreen() then
+      move_right_large()
+    else
+      move_right()
+    end
+
+  elseif app_name == 'Finder' then
+    flat_windows(app_windows, 840, 520, 120, 120)
+
+  else
+    win:centerOnScreen()
+  end
+
+end)
+
+hotkey.bind({ 'cmd', 'option' }, '1', function()
+  move_screen(screen.primaryScreen())
+end)
+hotkey.bind({ 'cmd', 'option' }, '2', function()
+  move_screen(screen.primaryScreen():next())
+end)
+
+
+-- reload
+hotkey.bind(primaryKey, 'escape', function()
+  hs.reload()
+end)
+
+-- Plugins
+local stackline = require 'stackline'
+stackline:init()
+
