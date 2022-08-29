@@ -9,6 +9,7 @@ local M = {}
 local setWindowCell = function(cell)
   return function(win, scr)
     win = win or hs.window.focusedWindow()
+    if not win then return end
     grid.set(win, cell, scr)
   end
 end

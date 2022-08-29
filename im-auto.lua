@@ -30,9 +30,8 @@ local app = {
   ['WeChat'] = M.S.pinyin
 }
 
-local function onApplicationChange()
-  local app_name = hs.window.frontmostWindow():application():title()
-  local target_source = app[app_name]
+local function onApplicationChange(name)
+  local target_source = app[name]
 
   if target_source then
     M.set(target_source)
@@ -46,6 +45,6 @@ end
 
 hs.application.watcher.new(function(name, type)
   if (type == hs.application.watcher.activated) then
-    onApplicationChange()
+    onApplicationChange(name)
   end
 end):start()

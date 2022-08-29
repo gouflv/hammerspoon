@@ -25,6 +25,7 @@ M.get_space_id = function(scr, space_index)
 end
 
 --[[
+Move windoww into space
 
 types: space_of_screen
 

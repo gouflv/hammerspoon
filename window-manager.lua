@@ -3,7 +3,6 @@ local L = require('layout')
 local S = require('space-utils')
 
 local primaryKey = { 'option' }
-local secondaryKey = { 'option', 'shift' }
 
 --[[
 Focus window to the direction
@@ -77,6 +76,7 @@ local app_layouts = {
     space_of_screen = { BuiltIn = 2, External = 1 },
   },
   ['WeChat'] = { pos = L.rb_thrid },
+  ['QQ'] = { pos = L.rb_thrid },
   ['Code'] = {
     pos = L.r_half,
     space_of_screen = { BuiltIn = 2, External = 1 },
@@ -135,10 +135,7 @@ local auto_move = function(win)
 end
 
 local auto_move_all = function()
-  local windowFilter = hs.window.filter.new():setCurrentSpace(nil)
-
-  print(hs.inspect(windowFilter.getWindows()))
-
+  -- TODO find window cross spaces 
   hs.window.desktop():focus()
   hs.fnutils.each(hs.window.allWindows(), auto_move)
   hs.timer.doAfter(0.5, function()
