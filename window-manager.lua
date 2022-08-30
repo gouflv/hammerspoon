@@ -51,7 +51,7 @@ hotkey.bind(primaryKey, 'u', function() L.rt_quarter() end)
 hotkey.bind(primaryKey, 'm', function() L.rb_quarter() end)
 
 hotkey.bind(primaryKey, 'f', function() L.full() end)
-hotkey.bind(primaryKey, 'c', function() L.center_animated() end)
+hotkey.bind(primaryKey, 'c', function() L.center() end)
 
 --[[
 Auto layout by APP
