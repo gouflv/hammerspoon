@@ -74,6 +74,7 @@ local app_layouts = {
   ['Mail'] = { size = { w = 1100, h = 700 }, },
   ['Notes'] = { size = { w = 1100, h = 800 }, },
   ['Calendar'] = { size = { w = 1100, h = 800 }, },
+  ['Logseq'] = { size = { w = 1000, h = 850 }, },
   ['WeChat'] = { pos = L.rb_3x3 },
   ['QQ'] = { pos = L.rb_3x3 },
   ['Google Chrome'] = { pos = L.lb_quarter, space_of_screen = DevSpace, },
