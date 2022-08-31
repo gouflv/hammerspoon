@@ -54,53 +54,34 @@ hotkey.bind(primaryKey, 'f', function() L.full() end)
 hotkey.bind(primaryKey, 'c', function() L.center() end)
 
 --[[
-Auto layout by APP
+Auto layout for app window
 
-APP option keys
-  pos
-    fn - Default layout position, running on `auto_layout`
+options:
+  [ pos ]
+    fn - Default layout position function, running by `auto_layout`
 
-  size
-    {w, h} - Default window size, running on `center`
+  [ size ]
+    {w, h} - Default window size, use on running `center`
 
-  space_of_screen
-    { BuiltIn = num, External = num } - Move window to the space of screen,
-                                          running on `auto_move`
+  [ space_of_screen ]
+    { BuiltIn = num, External = num } - Move window to the space of screen, running on `auto_move`
 
 --]]
+local DevSpace = { BuiltIn = 2, External = 1 }
 local app_layouts = {
+  ['Finder'] = { pos = L.stack({ w = 920, h = 620, offset_x = 50, offset_y = 50 }) },
   ['Safari'] = { pos = L.main_center, },
-  ['Google Chrome'] = { pos = L.lb_quarter },
-  ['Firefox'] = {
-    pos = L.l_half,
-    space_of_screen = { BuiltIn = 2, External = 1 },
-  },
-  ['WeChat'] = { pos = L.rb_thrid },
-  ['QQ'] = { pos = L.rb_thrid },
-  ['Code'] = {
-    pos = L.r_half,
-    space_of_screen = { BuiltIn = 2, External = 1 },
-  },
-  ['iTerm2'] = {
-    pos = L.r_half,
-    space_of_screen = { BuiltIn = 2, External = 1 },
-  },
-  ['WebStorm'] = {
-    pos = L.r_half,
-    space_of_screen = { BuiltIn = 2, External = 1 },
-  },
-  ['Dash'] = {
-    pos = L.rb_quarter,
-    space_of_screen = { BuiltIn = 2, External = 1 },
-  },
-  ['Finder'] = {
-    pos = L.stack({
-      width = 920,
-      height = 620,
-      offset_x = 50,
-      offset_y = 50
-    })
-  },
+  ['Mail'] = { size = { w = 1100, h = 700 }, },
+  ['Notes'] = { size = { w = 1100, h = 800 }, },
+  ['Calendar'] = { size = { w = 1100, h = 800 }, },
+  ['WeChat'] = { pos = L.rb_3x3 },
+  ['QQ'] = { pos = L.rb_3x3 },
+  ['Google Chrome'] = { pos = L.lb_quarter, space_of_screen = DevSpace, },
+  ['Firefox'] = { pos = L.l_half, space_of_screen = DevSpace, },
+  ['Code'] = { pos = L.r_half, space_of_screen = DevSpace, },
+  ['iTerm2'] = { pos = L.r_half, space_of_screen = DevSpace, },
+  ['WebStorm'] = { pos = L.r_half, space_of_screen = DevSpace, },
+  ['Dash'] = { pos = L.rb_quarter, space_of_screen = DevSpace, },
 }
 
 -- Auto layout
@@ -114,7 +95,7 @@ local auto_layout = function(win)
     app_config.pos(win)
   else
     print('app layout no defined', app_name)
-    L.center()
+    L.center(nil, nil, app_config and app_config.size)
   end
 end
 
@@ -149,5 +130,5 @@ hotkey.bind(primaryKey, 's', move_to_next_screen)
 
 hotkey.bind(primaryKey, 'v', auto_move_all)
 
--- Lyaout GUI
+-- Layout GUI
 hotkey.bind(primaryKey, 'g', function() hs.grid.show() end)

@@ -14,15 +14,16 @@ local setWindowCell = function(cell)
   end
 end
 
-local center = function(win, scr)
+local center = function(win, scr, size)
   win = win or hs.window.focusedWindow()
+  if size then win:setSize(size) end
   win:centerOnScreen(scr, true, 0.2)
 end
 
 local stack = function(option)
   return function(win, scr)
-    local width = option.width
-    local height = option.height
+    local width = option.w
+    local height = option.h
     local off_x = option.offset_x
     local off_y = option.offset_y
 
@@ -72,9 +73,9 @@ M.lb_quarter = setWindowCell('0,2 3x2')
 M.rt_quarter = setWindowCell('3,0 3x2')
 M.rb_quarter = setWindowCell('3,2 3x2')
 
-M.rb_thrid = setWindowCell('3,1 3,4')
+M.rb_3x3 = setWindowCell('3,1 3x3')
 
-M.main_center = setWindowCell('1,0 5,4')
+M.main_center = setWindowCell('1,0 4x4')
 M.full = setWindowCell('0,0 6x4')
 
 M.center = center
