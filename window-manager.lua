@@ -12,7 +12,15 @@ Keybind of directions:
         h   l
           j
 --]]
+local focus_mode_timeout = 5
 local focus_mode = hotkey.modal.new(primaryKey, 'd')
+
+function focus_mode:entered()
+  hs.alert.show('Focus Mode', { textSize = 16, radius = 6 }, focus_mode_timeout)
+  hs.timer.doAfter(focus_mode_timeout, function() focus_mode:exit() end)
+end
+
+function focus_mode:exited() hs.alert.closeAll() end
 
 local focus_window_filter = hs.window.filter.new()
 
@@ -73,6 +81,7 @@ local app_layouts = {
   ['Safari'] = { pos = L.main_center, },
   ['Mail'] = { size = { w = 1100, h = 700 }, },
   ['Notes'] = { size = { w = 1100, h = 800 }, },
+  ['Reminders'] = { size = { w = 680, h = 760 }, },
   ['Calendar'] = { size = { w = 1100, h = 800 }, },
   ['Logseq'] = { size = { w = 1000, h = 850 }, },
   ['WeChat'] = { pos = L.rb_3x3 },
