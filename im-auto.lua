@@ -43,8 +43,9 @@ local function onApplicationChange(name)
   end
 end
 
-hs.application.watcher.new(function(name, type)
+local watcher = hs.application.watcher.new(function(name, type)
   if (type == hs.application.watcher.activated) then
     onApplicationChange(name)
   end
-end):start()
+end)
+watcher:start()
