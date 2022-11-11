@@ -92,6 +92,7 @@ local app_layouts = {
   ['iTerm2'] = { pos = L.r_half, space_of_screen = DevSpace, },
   ['WebStorm'] = { pos = L.r_half, space_of_screen = DevSpace, },
   ['Dash'] = { pos = L.rb_quarter, space_of_screen = DevSpace, },
+  ['Fork'] = { size = { w = 1100, h = 800 }, },
 }
 
 -- Auto layout
@@ -126,12 +127,13 @@ local auto_move = function(win)
 end
 
 local auto_move_all = function()
-  -- TODO find window cross spaces 
+  -- TODO find window cross spaces
   hs.window.desktop():focus()
   hs.fnutils.each(hs.window.allWindows(), auto_move)
   hs.timer.doAfter(0.5, function()
     hs.fnutils.each(hs.window.allWindows(), auto_layout)
   end)
+  S.all_windows_of_spaces()
 end
 
 hotkey.bind(primaryKey, '1', auto_layout)

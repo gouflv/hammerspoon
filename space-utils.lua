@@ -56,4 +56,24 @@ M.move = function(win, space_of_screen)
   hs.spaces.moveWindowToSpace(win, space_id)
 end
 
+-- TODO move window to near space
+M.move_prev = function (win)
+  
+end
+
+M.move_next = function (win)
+  
+end
+
+--[[
+Find all window in all spaces for all screens
+--]]
+M.all_windows_of_spaces = function()
+  local windows = {}
+  hs.fnutils.each(hs.spaces.allSpaces(), function(spaces)
+    hs.fnutils.each(spaces, function(space_id)
+    end)
+  end)
+end
+
 return M
