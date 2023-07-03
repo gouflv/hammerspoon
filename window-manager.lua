@@ -58,9 +58,6 @@ hotkey.bind(primaryKey, 'n', function() L.lb_quarter() end)
 hotkey.bind(primaryKey, 'u', function() L.rt_quarter() end)
 hotkey.bind(primaryKey, 'm', function() L.rb_quarter() end)
 
-hotkey.bind(primaryKey, 'f', function() L.full() end)
-hotkey.bind(primaryKey, 'c', function() L.center() end)
-
 --[[
 Auto layout for app window
 
@@ -85,18 +82,24 @@ local app_layouts = {
   ['Calendar'] = { size = { w = 1100, h = 800 }, },
   ['Logseq'] = { size = { w = 1000, h = 850 }, },
   ['WeChat'] = { pos = L.rb_3x3 },
+  ['Telegram'] = { pos = L.lb_3x3 },
   ['QQ'] = { pos = L.rb_3x3 },
-  ['Google Chrome'] = { pos = L.lb_quarter, space_of_screen = DevSpace, },
+  ['Google Chrome'] = { pos = L.l_half, space_of_screen = DevSpace, },
   ['Firefox'] = { pos = L.l_half, space_of_screen = DevSpace, },
+  ['Microsoft Edge'] = { pos = L.l_half, space_of_screen = DevSpace, },
   ['Code'] = { pos = L.r_half, space_of_screen = DevSpace, },
   ['iTerm2'] = { pos = L.r_half, space_of_screen = DevSpace, },
+  ['Warp'] = { pos = L.r_half, space_of_screen = DevSpace, },
   ['WebStorm'] = { pos = L.r_half, space_of_screen = DevSpace, },
   ['Dash'] = { pos = L.rb_quarter, space_of_screen = DevSpace, },
-  ['Fork'] = { size = { w = 1100, h = 800 }, },
+  ['Fork'] = { size = { w = 1100, h = 800 }, space_of_screen = DevSpace },
 }
 
 -- Auto layout
-local auto_layout = function(win)
+-- options = { ignoreNoMatched = boolean }
+local auto_layout = function(win, options)
+  local ignoreNoMatched = options and options.ignoreNoMatched
+
   win = win or hs.window.focusedWindow()
   local app_name = win:application():title()
   print('auto layout window', app_name)
@@ -104,7 +107,7 @@ local auto_layout = function(win)
   local app_config = app_layouts[app_name]
   if app_config and app_config.pos then
     app_config.pos(win)
-  else
+  elseif not ignoreNoMatched then
     print('app layout no defined', app_name)
     L.center(nil, nil, app_config and app_config.size)
   end
@@ -133,7 +136,7 @@ local auto_move_all = function()
   hs.timer.doAfter(0.5, function()
     hs.fnutils.each(hs.window.allWindows(), auto_layout)
   end)
-  S.all_windows_of_spaces()
+  -- S.all_windows_of_spaces()
 end
 
 hotkey.bind(primaryKey, '1', auto_layout)
@@ -144,3 +147,28 @@ hotkey.bind(primaryKey, 'v', auto_move_all)
 
 -- Layout GUI
 hotkey.bind(primaryKey, 'g', function() hs.grid.show() end)
+
+local toggleFullAndAutoLayout = function()
+  local win = hs.window.focusedWindow()
+  local width = win:size().w
+  local screen_width = win:screen():frame().w
+  -- If width greater than 80% of screen width, then auto layout
+  if width > screen_width * 0.8 then
+    auto_layout(win)
+  else
+    L.full()
+  end
+end
+
+hotkey.bind(primaryKey, 'f', function() toggleFullAndAutoLayout() end)
+hotkey.bind(primaryKey, 'c', function() L.center() end)
+
+-- Watchers
+local wf = hs.window.filter.new(nil)
+wf:subscribe(hs.window.filter.windowCreated, function(win)
+  hs.timer.doAfter(0.5, function()
+    auto_layout(win, {
+      ignoreNoMatched = true
+    })
+  end)
+end)

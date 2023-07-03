@@ -74,6 +74,7 @@ M.rt_quarter = setWindowCell('3,0 3x2')
 M.rb_quarter = setWindowCell('3,2 3x2')
 
 M.rb_3x3 = setWindowCell('3,1 3x3')
+M.lb_3x3 = setWindowCell('0,1 3x3')
 
 M.main_center = setWindowCell('1,0 4x4')
 M.full = setWindowCell('0,0 6x4')
